@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:my_shop/core/services/firestore_user.dart';
+import 'package:my_shop/model/user_model.dart';
 
 class AuthViewModel extends GetxController {
 
@@ -52,7 +54,9 @@ class AuthViewModel extends GetxController {
     switch (res.status) {
       case FacebookLoginStatus.success:
       // Logged in
-
+        final faceCredential = FacebookAuthProvider.credential(res.accessToken!.token);
+        UserCredential userCredential = await _auth.signInWithCredential(faceCredential);
+        print(userCredential);
       // Send access token to server for validation and auth
         final FacebookAccessToken? accessToken = res.accessToken;
         print('Access token: ${accessToken!.token}');
@@ -80,11 +84,16 @@ class AuthViewModel extends GetxController {
         print('Error while log in: ${res.error}');
         break;
     }
+    // FacebookLoginResult result = await _facebookLogin.logIn(permissions: [FacebookPermission.email]);
+    // final accessToken = result.accessToken!.token;
+    // if(result.status == FacebookLoginStatus.success){
+    //   final faceCredential = FacebookAuthProvider.credential(accessToken);
+    //   UserCredential userCredential = await _auth.signInWithCredential(faceCredential);
+    //   print(userCredential);
+    // }
   }
 
   void signInWithEmailAndPassword() async {
-    print(email);
-    print(password);
       try {
         await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) => {
           print(value)
@@ -93,6 +102,24 @@ class AuthViewModel extends GetxController {
         Get.snackbar('Error with Login', e.message! , colorText: Colors.black ,
         snackPosition: SnackPosition.BOTTOM , duration: Duration(seconds: 5));
       }
+  }
+
+  void signUpWithEmailAndPassword() async {
+    try {
+      await _auth.createUserWithEmailAndPassword(email: email, password: password).then((user) async{
+        await FireStoreUser().addToFireStore(UserModel(
+          userEmail: user.user!.email,
+          userId: user.user!.uid,
+          userName: name,
+          userPic: '',
+        ));
+      });
+
+    }on FirebaseException catch(e) {
+      print(e.message!);
+      Get.snackbar('Error with Login', e.message! , colorText: Colors.black ,
+          snackPosition: SnackPosition.BOTTOM , duration: Duration(seconds: 5));
+    }
   }
 
 }
