@@ -17,10 +17,16 @@ class AuthViewModel extends GetxController {
   late String password;
   String? name;
 
+
+  Rxn<User?> _user = Rxn<User>();
+
+  String? get user => _user.value?.email;
+
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    _user.bindStream(_auth.authStateChanges());
   }
 
   @override
@@ -65,7 +71,7 @@ class AuthViewModel extends GetxController {
       await _auth.signInWithCredential(faceCredential).then((user) async{
         saveUser(user);
       });
-      Get.offAll(HomeScreen());
+      // Get.offAll(HomeScreen());
     }on FirebaseException catch(e) {
     print(e.message!);
     Get.snackbar('Error with Login', e.message! , colorText: Colors.black ,
@@ -73,52 +79,6 @@ class AuthViewModel extends GetxController {
     }
 
   }
-
-
-    // final res = await _facebookLogin.logIn(permissions: [
-    //   FacebookPermission.publicProfile,
-    //   FacebookPermission.email,
-    // ]);
-    // switch (res.status) {
-    //   case FacebookLoginStatus.success:
-    //   // Logged in
-    //     final faceCredential = FacebookAuthProvider.credential(res.accessToken!.token);
-    //     UserCredential userCredential = await _auth.signInWithCredential(faceCredential);
-    //     print(userCredential);
-    //   // Send access token to server for validation and auth
-    //     final FacebookAccessToken? accessToken = res.accessToken;
-    //     print('Access token: ${accessToken!.token}');
-    //
-    //     // Get profile data
-    //     final profile = await _facebookLogin.getUserProfile();
-    //     print('Hello, ${profile!.name}! You ID: ${profile.userId}');
-    //
-    //     // Get user profile image url
-    //     final imageUrl = await _facebookLogin.getProfileImageUrl(width: 100);
-    //     print('Your profile image: $imageUrl');
-    //
-    //     // Get email (since we request email permission)
-    //     final email = await _facebookLogin.getUserEmail();
-    //     // But user can decline permission
-    //     if (email != null)
-    //       print('And your email is $email');
-    //
-    //     break;
-    //   case FacebookLoginStatus.cancel:
-    //   // User cancel log in
-    //     break;
-    //   case FacebookLoginStatus.error:
-    //   // Log in failed
-    //     print('Error while log in: ${res.error}');
-    //     break;
-    // }
-    // FacebookLoginResult result = await _facebookLogin.logIn(permissions: [FacebookPermission.email]);
-    // final accessToken = result.accessToken!.token;
-    // if(result.status == FacebookLoginStatus.success){
-    //   final faceCredential = FacebookAuthProvider.credential(accessToken);
-    //   UserCredential userCredential = await _auth.signInWithCredential(faceCredential);
-    //   print(userCredential);
-    // }
   }
 
   void signInWithEmailAndPassword() async {

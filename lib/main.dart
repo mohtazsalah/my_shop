@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_shop/helper/binding.dart';
 import 'package:my_shop/view/auth/loginscreen.dart';
+import 'package:my_shop/view/control_view.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +19,12 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       initialBinding: Binding(),
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      home: Scaffold(
+        body: ControlView(),
       ),
-      home: LoginScreen(),
+      theme: ThemeData(
+        fontFamily: 'SourceSansPro',
+      ),
     );
   }
 }

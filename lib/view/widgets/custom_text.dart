@@ -6,12 +6,16 @@ class CustomText extends StatelessWidget {
   final double fontSize ;
   final Color color ;
   final Alignment alignment ;
+  final int? max ;
+  final double height;
 
   CustomText({
     this.text = '',
     this.fontSize = 16,
     this.color = Colors.black,
     this.alignment = Alignment.topLeft,
+    this.max,
+    this.height = 0,
   });
 
   @override
@@ -19,8 +23,10 @@ class CustomText extends StatelessWidget {
     return Container(
       alignment: alignment,
       child: Text(text,
+        maxLines: max,
         style: TextStyle(
           color: color,
+          height: height,
           fontSize: fontSize,
         ),
       ),
