@@ -4,8 +4,9 @@ import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_shop/core/services/firestore_user.dart';
+import 'package:my_shop/helper/local_storage_data.dart';
 import 'package:my_shop/model/user_model.dart';
-import 'package:my_shop/view/home/home_screen.dart';
+import 'package:my_shop/view/control_view.dart';
 
 class AuthViewModel extends GetxController {
 
@@ -13,6 +14,7 @@ class AuthViewModel extends GetxController {
   FirebaseAuth _auth = FirebaseAuth.instance;
   FacebookLogin _facebookLogin = FacebookLogin();
 
+  final LocalStorageData localStorageData = Get.find();
   late String email;
   late String password;
   String? name;
@@ -53,7 +55,7 @@ class AuthViewModel extends GetxController {
     await _auth.signInWithCredential(credential).then((user) {
       saveUser(user);
     });
-    Get.offAll(() => HomeScreen());
+    Get.offAll(ControlView());
   }on FirebaseException catch(e) {
   print(e.message!);
   Get.snackbar('Error with Login', e.message! , colorText: Colors.black ,
@@ -71,7 +73,7 @@ class AuthViewModel extends GetxController {
       await _auth.signInWithCredential(faceCredential).then((user) async{
         saveUser(user);
       });
-      // Get.offAll(HomeScreen());
+      Get.offAll(ControlView());
     }on FirebaseException catch(e) {
     print(e.message!);
     Get.snackbar('Error with Login', e.message! , colorText: Colors.black ,
@@ -83,9 +85,12 @@ class AuthViewModel extends GetxController {
 
   void signInWithEmailAndPassword() async {
       try {
-        await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) => {
-          print(value)
+        await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) async {
+          await FireStoreUser().getCurrentUser(value.user?.uid).then((value) {
+            setUser(UserModel.fromJson(value.data()as Map));
+          });
         });
+        Get.offAll(ControlView());
       }on FirebaseException catch(e) {
         Get.snackbar('Error with Login', e.message! , colorText: Colors.black ,
         snackPosition: SnackPosition.BOTTOM , duration: Duration(seconds: 5));
@@ -94,11 +99,14 @@ class AuthViewModel extends GetxController {
 
   void signUpWithEmailAndPassword() async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password).then((user) async{
+      await _auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password
+      ).then((user) async{
         saveUser(user);
       });
 
-      Get.offAll(HomeScreen());
+      Get.offAll(ControlView());
     }on FirebaseException catch(e) {
       print(e.message!);
       Get.snackbar('Error with Login', e.message! , colorText: Colors.black ,
@@ -108,11 +116,17 @@ class AuthViewModel extends GetxController {
 
 
   void saveUser(UserCredential user) async{
-    await FireStoreUser().addToFireStore(UserModel(
+    UserModel userModel = UserModel(
       userEmail: user.user!.email,
       userId: user.user!.uid,
       userName: name ?? user.user!.displayName,
       userPic: '',
-    ));
+    );
+    await FireStoreUser().addToFireStore(userModel);
+    setUser(userModel);
+  }
+
+  setUser(UserModel userModel) async {
+    await localStorageData.setUser(userModel);
   }
 }

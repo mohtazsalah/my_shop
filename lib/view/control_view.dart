@@ -1,13 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:my_shop/core/viewModel/auth_view_model.dart';
 import 'package:my_shop/core/viewModel/control_view_model.dart';
 import 'package:my_shop/view/auth/loginscreen.dart';
-import 'package:my_shop/view/card_view.dart';
-import 'package:my_shop/view/home/home_screen.dart';
-import 'package:my_shop/view/profile_view.dart';
 
 class ControlView extends GetWidget<AuthViewModel> {
   
@@ -17,6 +12,7 @@ class ControlView extends GetWidget<AuthViewModel> {
       return (Get.find<AuthViewModel>().user == null)
       ?LoginScreen()
       :GetBuilder<ControlViewModel>(
+        init: Get.put(ControlViewModel()),
         builder: (controller)=> Scaffold(
             body: controller.currentScreen,
           bottomNavigationBar: bottomNavigationBar(),
@@ -27,7 +23,7 @@ class ControlView extends GetWidget<AuthViewModel> {
   }
   Widget bottomNavigationBar(){
     return GetBuilder<ControlViewModel>(
-      init: ControlViewModel(),
+      init: Get.find(),
       builder: (controller) => BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
