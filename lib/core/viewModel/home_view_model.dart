@@ -26,7 +26,6 @@ class HomeViewModel extends GetxController{
       for(int i = 0 ; i < value.length ; i++){
         _categoryList.add(CategoryModel.fromJson(value[i].data()as Map<dynamic , dynamic>));
       }
-      print(_categoryList.length);
       update();
       _loading.value = false ;
     });
@@ -38,7 +37,6 @@ class HomeViewModel extends GetxController{
       for(int i = 0 ; i < value.length ; i++){
         _productsList.add(ProductModel.fromJson(value[i].data()as Map));
       }
-      print(_productsList.length);
       update();
       _loading.value = false ;
     });

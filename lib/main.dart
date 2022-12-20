@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_shop/core/viewModel/cart_view_model.dart';
 import 'package:my_shop/helper/binding.dart';
 import 'package:my_shop/view/auth/loginscreen.dart';
 import 'package:my_shop/view/control_view.dart';

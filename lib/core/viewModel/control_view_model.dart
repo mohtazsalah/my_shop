@@ -10,7 +10,7 @@ class ControlViewModel extends GetxController{
 
   int _navigatorValue = 0 ;
 
-  get navigatorValu => _navigatorValue;
+  get navigatorValue => _navigatorValue;
 
   void changeSelectedValue(int selectedValue){
     _navigatorValue = selectedValue;

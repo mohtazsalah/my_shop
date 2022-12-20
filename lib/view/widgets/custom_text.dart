@@ -23,8 +23,10 @@ class CustomText extends StatelessWidget {
     return Container(
       alignment: alignment,
       child: Text(text,
+        overflow: TextOverflow.ellipsis,
         maxLines: max,
         style: TextStyle(
+
           color: color,
           height: height,
           fontSize: fontSize,

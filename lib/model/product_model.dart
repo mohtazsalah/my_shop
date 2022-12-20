@@ -3,9 +3,9 @@ import 'package:my_shop/helper/extenstion.dart';
 
 class ProductModel {
 
-  String? title , hint , image , price , size ;
+  String? title , hint , image , price , size ,productId;
   Color? color;
-  ProductModel({this.title, this.hint, this.image, this.price, this.size, this.color});
+  ProductModel({this.title, this.hint, this.image, this.price, this.size, this.color , this.productId});
 
   ProductModel.fromJson(Map<dynamic , dynamic> map){
     if(map == null){
@@ -16,6 +16,7 @@ class ProductModel {
     hint = map['hint'];
     price = map['price'];
     size = map['size'];
+    productId = map['productId'];
     color = HexColor.fromHex(map['color']);
   }
 
@@ -26,6 +27,7 @@ class ProductModel {
       'price' : price,
       'image' : image,
       'size' : size,
+      'productId' : productId ,
       'color' : color,
     };
   }

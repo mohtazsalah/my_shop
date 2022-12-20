@@ -76,7 +76,7 @@ class ControlView extends GetWidget<AuthViewModel> {
             ),
           ),
         ],
-        currentIndex: controller.navigatorValu,
+        currentIndex: controller.navigatorValue,
         onTap: (index) => controller.changeSelectedValue(index),
         elevation: 0,
         selectedItemColor: Colors.black,

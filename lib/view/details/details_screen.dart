@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:my_shop/constance.dart';
+import 'package:my_shop/core/viewModel/cart_view_model.dart';
 import 'package:my_shop/helper/extenstion.dart';
+import 'package:my_shop/model/cart_product_model.dart';
 import 'package:my_shop/model/product_model.dart';
 import 'package:my_shop/view/widgets/custom_button.dart';
 import 'package:my_shop/view/widgets/custom_text.dart';
@@ -13,6 +17,7 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: Colors.grey.shade100,
         child: Column(
           children: [
             Container(
@@ -104,7 +109,7 @@ class DetailsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 15,),
                       CustomText(
-                        text: productModel!.hint!,
+                        text: '${productModel!.hint!}+${productModel!.hint!}',
                         height: 2.5,
                       ),
                     ],
@@ -112,29 +117,47 @@ class DetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(top: 20 , bottom: 20 , right: 40 , left: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      CustomText(
-                        text: 'Price',
-                      ),
-                      CustomText(
-                        text: productModel!.price!,
-                      )
-                    ],
-                  ),
-                  CustomButton(
-                    text: 'ADD',
-                    color: HexColor.fromHex('#80B19A'),
-                    onPress: (){
-
-                    },
-                  ),
-                ],
+            GetBuilder<CartViewModel>(
+              init: Get.find(),
+              builder:(controller)=> Container(
+                color: Colors.white,
+                padding: EdgeInsets.only(top: 20 , bottom: 20 , right: 40 , left: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        CustomText(
+                          text: 'PRICE',
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                        CustomText(
+                          text: productModel!.price!,
+                          color: primaryColor,
+                          fontSize: 18,
+                        )
+                      ],
+                    ),
+                    CustomButton(
+                      text: 'ADD',
+                      color: HexColor.fromHex('#00C569'),
+                      width: 150,
+                      radius: 5,
+                      onPress: (){
+                        controller.addProduct(
+                          CartProductModel(
+                            name: productModel!.title!,
+                            image: productModel!.image!,
+                            price: productModel!.price!,
+                            quantity: 1,
+                            productId: productModel!.productId!,
+                          )
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
