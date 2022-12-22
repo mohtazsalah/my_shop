@@ -29,6 +29,9 @@ class AuthViewModel extends GetxController {
     // TODO: implement onInit
     super.onInit();
     _user.bindStream(_auth.authStateChanges());
+    if(_auth.currentUser != null){
+      getCurrentUserData(_auth.currentUser?.uid);
+    }
   }
 
   @override
@@ -86,9 +89,10 @@ class AuthViewModel extends GetxController {
   void signInWithEmailAndPassword() async {
       try {
         await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) async {
-          await FireStoreUser().getCurrentUser(value.user?.uid).then((value) {
-            setUser(UserModel.fromJson(value.data()as Map));
-          });
+          getCurrentUserData(value.user?.uid);
+          // await FireStoreUser().getCurrentUser(value.user?.uid).then((value) {
+          //   setUser(UserModel.fromJson(value.data()as Map));
+          // });
         });
         Get.offAll(ControlView());
       }on FirebaseException catch(e) {
@@ -124,6 +128,12 @@ class AuthViewModel extends GetxController {
     );
     await FireStoreUser().addToFireStore(userModel);
     setUser(userModel);
+  }
+
+  void getCurrentUserData(String? uid) async {
+    await FireStoreUser().getCurrentUser(uid).then((value) {
+      setUser(UserModel.fromJson(value.data()as Map));
+    });
   }
 
   setUser(UserModel userModel) async {

@@ -31,6 +31,7 @@ class DetailsScreen extends StatelessWidget {
             SizedBox(height: 10,),
             Expanded(
               child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Container(
                   padding: EdgeInsets.all(18),
                   child: Column(
@@ -111,6 +112,7 @@ class DetailsScreen extends StatelessWidget {
                       CustomText(
                         text: '${productModel!.hint!}+${productModel!.hint!}',
                         height: 2.5,
+                        max: productModel!.hint!.length,
                       ),
                     ],
                   ),
@@ -118,7 +120,7 @@ class DetailsScreen extends StatelessWidget {
               ),
             ),
             GetBuilder<CartViewModel>(
-              init: Get.find(),
+              init: Get.put(CartViewModel()),
               builder:(controller)=> Container(
                 color: Colors.white,
                 padding: EdgeInsets.only(top: 20 , bottom: 20 , right: 40 , left: 40),

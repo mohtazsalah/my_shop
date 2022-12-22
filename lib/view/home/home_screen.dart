@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
           :Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.only(top: 50.0 , left: 20 , right: 20),
               child: Column(
@@ -73,6 +74,7 @@ class HomeScreen extends StatelessWidget {
         child: ListView.separated(
           itemCount: controller.categoryList.length,
           scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
           itemBuilder: (context , index){
             return Column(
               children: [
@@ -107,10 +109,11 @@ class HomeScreen extends StatelessWidget {
         child: ListView.separated(
           itemCount: controller.productsList.length,
           scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
           itemBuilder: (context , index){
             return GestureDetector(
               onTap: (){
-                Get.to(() => DetailsScreen(productModel: controller.productsList[index],));
+                Get.to(DetailsScreen(productModel: controller.productsList[index],));
               },
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.4,

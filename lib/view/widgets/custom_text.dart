@@ -8,6 +8,7 @@ class CustomText extends StatelessWidget {
   final Alignment alignment ;
   final int? max ;
   final double height;
+  final FontWeight fontWeight;
 
   CustomText({
     this.text = '',
@@ -16,6 +17,7 @@ class CustomText extends StatelessWidget {
     this.alignment = Alignment.topLeft,
     this.max,
     this.height = 0,
+    this.fontWeight = FontWeight.normal,
   });
 
   @override
@@ -26,10 +28,10 @@ class CustomText extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: max,
         style: TextStyle(
-
           color: color,
           height: height,
           fontSize: fontSize,
+          fontWeight: fontWeight,
         ),
       ),
     );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:my_shop/constance.dart';
 import 'package:my_shop/core/viewModel/cart_view_model.dart';
+import 'package:my_shop/view/check_out/check_out_view.dart';
 import 'package:my_shop/view/widgets/custom_button.dart';
 import 'package:my_shop/view/widgets/custom_text.dart';
 
@@ -13,13 +15,26 @@ class CardView extends StatelessWidget {
     return  SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 40.0),
-            child: Scaffold(
-              body: Column(
+            child: GetBuilder<CartViewModel>(
+            init: Get.put(CartViewModel()),
+            builder:(controller)=> Scaffold(
+              body: controller.cartProductList.isEmpty
+                  ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset('assets/images/empty_cart.svg' , width: 200, height: 200,),
+                  SizedBox(height: 30,),
+                  CustomText(
+                    text: 'Cart Empty',
+                    fontSize: 30,
+                    alignment: Alignment.center,
+                  ),
+                ],
+              )
+                  :Column(
                 children: [
                   Expanded(
-                    child: GetBuilder<CartViewModel>(
-                      init: Get.put(CartViewModel()),
-                      builder:(controller)=> Container(
+                    child: Container(
                         child: ListView.separated(
                               itemBuilder: (context , index){
                                 return Container(
@@ -107,7 +122,6 @@ class CardView extends StatelessWidget {
                             },
                           ),
                       ),
-                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 30.0 ,top: 10, bottom: 10, right: 30.0),
@@ -135,7 +149,9 @@ class CardView extends StatelessWidget {
                         CustomButton(
                             text: 'CHECKOUT',
                             color: primaryColor,
-                            onPress: (){},
+                            onPress: (){
+                              Get.to(CheckOutView());
+                            },
                           width: 150,
                           height: 60,
                         ),
@@ -146,6 +162,7 @@ class CardView extends StatelessWidget {
               ),
             ),
           )
-      );
+      ),
+    );
   }
 }
